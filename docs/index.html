@@ -4,38 +4,47 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Primo Star Calculator</title>
+
+<!-- Bootstrap 5 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+
 <style>
   :root{
-    --bg: #100c1a;
-    --bg-panel: #1a1428;
-    --bg-field: #221a35;
-    --line: #3a2d57;
-    --ink: #ede7fb;
-    --ink-dim: #a89bcc;
+    --ink: #f3eefe;
+    --ink-dim: #cdc2e8;
     --accent: #c9a6ff;
-    --accent-glow: #8a5cf6;
     --star: #ffd76a;
   }
 
-  * { box-sizing: border-box; }
+  html, body {
+    height: 100%;
+  }
 
   body {
     margin: 0;
-    min-height: 100vh;
-    background:
-      radial-gradient(circle at 20% 0%, #2a1b48 0%, transparent 45%),
-      radial-gradient(circle at 85% 15%, #1c2a4a 0%, transparent 40%),
-      var(--bg);
-    color: var(--ink);
     font-family: 'Georgia', 'Iowan Old Style', serif;
-    display: flex;
-    justify-content: center;
-    padding: 48px 20px 80px;
+    color: var(--ink);
+
+    /* ====================================================
+       CUSTOM BACKGROUND IMAGE
+       Replace "background.jpg" with your own image filename.
+       Put the image in the same folder as this HTML file
+       (or update the path below to wherever it lives).
+       ==================================================== */
+    background-image:
+      linear-gradient(180deg, rgba(10,6,20,0.55), rgba(10,6,20,0.75)),
+      url("background.jpg");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
+    min-height: 100vh;
   }
 
-  .sheet {
-    width: 100%;
+  .wrap {
     max-width: 560px;
+    margin: 0 auto;
+    padding: 56px 18px 80px;
   }
 
   .eyebrow {
@@ -49,27 +58,33 @@
 
   h1 {
     font-size: 32px;
-    margin: 0 0 4px;
     font-weight: 600;
-    letter-spacing: 0.01em;
+    margin: 0 0 4px;
   }
 
   h1 span {
     color: var(--star);
-    text-shadow: 0 0 18px rgba(255, 215, 106, 0.45);
+    text-shadow: 0 0 18px rgba(255, 215, 106, 0.5);
   }
 
   .sub {
     color: var(--ink-dim);
     font-size: 14px;
-    margin: 0 0 28px;
     font-family: 'Courier New', monospace;
+    margin: 0 0 28px;
+  }
+
+  /* ---- Frosted glass panels ---- */
+  .glass {
+    background: rgba(40, 28, 64, 0.35);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
   }
 
   .panel {
-    background: var(--bg-panel);
-    border: 1px solid var(--line);
-    border-radius: 14px;
     padding: 24px;
     margin-bottom: 18px;
   }
@@ -84,73 +99,44 @@
     margin-bottom: 8px;
   }
 
-  select, input[type="number"] {
-    width: 100%;
-    background: var(--bg-field);
-    border: 1px solid var(--line);
+  .form-select, .form-control {
+    background: rgba(20, 14, 34, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.18);
     color: var(--ink);
     font-family: 'Georgia', serif;
     font-size: 16px;
     padding: 12px 14px;
     border-radius: 8px;
-    outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-    appearance: none;
   }
 
-  select:focus, input[type="number"]:focus {
+  .form-select:focus, .form-control:focus {
+    background: rgba(20, 14, 34, 0.6);
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(138, 92, 246, 0.25);
+    box-shadow: 0 0 0 3px rgba(201, 166, 255, 0.25);
+    color: var(--ink);
   }
 
-  select {
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23a89bcc' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 14px center;
-    padding-right: 36px;
+  .form-select option {
+    background: #1a1428;
+    color: var(--ink);
   }
 
-  .field-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px 18px;
-  }
-
-  .field { margin-bottom: 18px; }
-  .field:last-child { margin-bottom: 0; }
-
-  .field .hint {
+  .hint {
     font-family: 'Courier New', monospace;
     font-size: 11px;
     color: var(--ink-dim);
     margin-top: 6px;
-    opacity: 0.75;
+    opacity: 0.8;
   }
 
-  .field-full { grid-column: 1 / -1; }
-
-  .divider {
-    border: none;
-    border-top: 1px solid var(--line);
+  hr.divider {
+    border-top: 1px solid rgba(255, 255, 255, 0.14);
     margin: 22px 0;
   }
 
   .result {
-    background: linear-gradient(160deg, #241a3d, #1a1428);
-    border: 1px solid var(--accent-glow);
-    border-radius: 14px;
     padding: 28px 24px;
     text-align: center;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .result::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(circle at 50% -10%, rgba(138,92,246,0.35), transparent 60%);
-    pointer-events: none;
   }
 
   .result-label {
@@ -167,7 +153,7 @@
     font-weight: 700;
     color: var(--star);
     margin: 0;
-    text-shadow: 0 0 24px rgba(255, 215, 106, 0.35);
+    text-shadow: 0 0 24px rgba(255, 215, 106, 0.4);
     line-height: 1;
   }
 
@@ -192,7 +178,7 @@
   .breakdown div {
     display: flex;
     justify-content: space-between;
-    border-bottom: 1px dashed rgba(168, 155, 204, 0.15);
+    border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
     padding-bottom: 5px;
   }
 
@@ -202,8 +188,8 @@
     font-family: 'Courier New', monospace;
     font-size: 12px;
     color: var(--ink-dim);
-    background: rgba(138, 92, 246, 0.08);
-    border: 1px dashed var(--line);
+    background: rgba(201, 166, 255, 0.1);
+    border: 1px dashed rgba(255, 255, 255, 0.18);
     border-radius: 8px;
     padding: 10px 14px;
     margin-top: 14px;
@@ -215,57 +201,57 @@
 </head>
 <body>
 
-<div class="sheet">
+<div class="wrap">
   <p class="eyebrow">Resource Planning</p>
   <h1>Primo <span>Star</span> Calculator</h1>
   <p class="sub">// estimate your primo star yield from current progress</p>
 
-  <div class="panel">
-    <div class="field">
+  <div class="glass panel">
+    <div class="mb-4">
       <label for="season">Season</label>
-      <select id="season">
+      <select id="season" class="form-select">
         <option value="s1">S1 — Witching Hours</option>
         <option value="s2">S2 — Crossed Paths</option>
       </select>
-      <div class="notice" id="s2-notice">S2 — Crossed Paths scoring hasn't been set yet. Switch back to S1 to calculate, or tell me the S2 rates and I'll wire them in.</div>
+      <div class="notice" id="s2-notice">S2 — Crossed Paths scoring hasn't been set yet. Switch back to S1 to calculate, or send me the S2 rates and I'll wire them in.</div>
     </div>
 
     <hr class="divider">
 
-    <div class="field-row">
-      <div class="field field-full">
+    <div class="row g-3">
+      <div class="col-12">
         <label for="charLv">Character Lv</label>
-        <input type="number" id="charLv" min="0" placeholder="e.g. 130" value="100">
+        <input type="number" id="charLv" class="form-control" min="0" placeholder="e.g. 130" value="100">
         <div class="hint">+100 score per lv over 100</div>
       </div>
 
-      <div class="field">
+      <div class="col-6">
         <label for="skillLv">Skill Lv (avg)</label>
-        <input type="number" id="skillLv" min="0" placeholder="e.g. 110" value="100">
-        <div class="hint">8 slots · +104 score/lv over 100</div>
+        <input type="number" id="skillLv" class="form-control" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">8 slots · +104/lv over 100</div>
       </div>
 
-      <div class="field">
+      <div class="col-6">
         <label for="equipLv">Equip Lv (avg)</label>
-        <input type="number" id="equipLv" min="0" placeholder="e.g. 110" value="100">
-        <div class="hint">5 slots · +190 score/lv over 100</div>
+        <input type="number" id="equipLv" class="form-control" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">5 slots · +190/lv over 100</div>
       </div>
 
-      <div class="field">
+      <div class="col-6">
         <label for="fantomonLv">Fantomon Lv (avg)</label>
-        <input type="number" id="fantomonLv" min="0" placeholder="e.g. 110" value="100">
-        <div class="hint">4 slots · +56 score/lv over 100</div>
+        <input type="number" id="fantomonLv" class="form-control" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">4 slots · +56/lv over 100</div>
       </div>
 
-      <div class="field">
+      <div class="col-6">
         <label for="relicLv">Relic Lv (avg)</label>
-        <input type="number" id="relicLv" min="0" placeholder="e.g. 15" value="10">
-        <div class="hint">20 slots · +1140 score/lv over 10</div>
+        <input type="number" id="relicLv" class="form-control" min="0" placeholder="e.g. 15" value="10">
+        <div class="hint">20 slots · +1140/lv over 10</div>
       </div>
     </div>
   </div>
 
-  <div class="result">
+  <div class="glass result">
     <p class="result-label">Estimated Primo Stars</p>
     <p class="result-value" id="starOutput">10<small>stars</small></p>
 
