@@ -25,14 +25,6 @@
     font-family: 'Georgia', 'Iowan Old Style', serif;
     color: var(--ink);
 
-    /* ====================================================
-       CUSTOM BACKGROUND IMAGE — desktop default
-       Replace "background-desktop.jpg" with your own image.
-       A separate mobile (vertical) image is set below via
-       media query — see "background-mobile.jpg".
-       Put both images in the same folder as this HTML file
-       (or update the paths to wherever they live).
-       ==================================================== */
     background-image:
       linear-gradient(180deg, rgba(10,6,20,0.55), rgba(10,6,20,0.75)),
       url("background-desktop.jpg");
@@ -216,18 +208,17 @@
 <body>
 
 <div class="wrap">
-  <p class="eyebrow">Resource Planning</p>
   <h1>Primo <span>Star</span> Calculator</h1>
-  <p class="sub">// estimate your primo star yield from current progress</p>
+  <p class="sub">// estimate your primo star</p>
 
   <div class="glass panel">
     <div class="mb-4">
       <label for="season">Season</label>
       <select id="season" class="form-select">
         <option value="s1">S1 — Witching Hours</option>
-        <option value="s2">S2 — Crossed Paths</option>
+        <option value="s2" disabled>S2 — Crossed Paths</option >
       </select>
-      <div class="notice" id="s2-notice">S2 — Crossed Paths scoring hasn't been set yet. Switch back to S1 to calculate, or send me the S2 rates and I'll wire them in.</div>
+      <div class="notice" id="s2-notice">S2 — Crossed Paths scoring hasn't been set yet. I am too lazy to check other server, so send me the S2 rates and I'll wire them in.</div>
     </div>
 
     <hr class="divider">
