@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Primo Star Calculator</title>
+<style>
+  :root{
+    --bg: #100c1a;
+    --bg-panel: #1a1428;
+    --bg-field: #221a35;
+    --line: #3a2d57;
+    --ink: #ede7fb;
+    --ink-dim: #a89bcc;
+    --accent: #c9a6ff;
+    --accent-glow: #8a5cf6;
+    --star: #ffd76a;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(circle at 20% 0%, #2a1b48 0%, transparent 45%),
+      radial-gradient(circle at 85% 15%, #1c2a4a 0%, transparent 40%),
+      var(--bg);
+    color: var(--ink);
+    font-family: 'Georgia', 'Iowan Old Style', serif;
+    display: flex;
+    justify-content: center;
+    padding: 48px 20px 80px;
+  }
+
+  .sheet {
+    width: 100%;
+    max-width: 560px;
+  }
+
+  .eyebrow {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    font-size: 11px;
+    color: var(--ink-dim);
+    margin: 0 0 6px;
+  }
+
+  h1 {
+    font-size: 32px;
+    margin: 0 0 4px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  h1 span {
+    color: var(--star);
+    text-shadow: 0 0 18px rgba(255, 215, 106, 0.45);
+  }
+
+  .sub {
+    color: var(--ink-dim);
+    font-size: 14px;
+    margin: 0 0 28px;
+    font-family: 'Courier New', monospace;
+  }
+
+  .panel {
+    background: var(--bg-panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 24px;
+    margin-bottom: 18px;
+  }
+
+  label {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin-bottom: 8px;
+  }
+
+  select, input[type="number"] {
+    width: 100%;
+    background: var(--bg-field);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-family: 'Georgia', serif;
+    font-size: 16px;
+    padding: 12px 14px;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    appearance: none;
+  }
+
+  select:focus, input[type="number"]:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(138, 92, 246, 0.25);
+  }
+
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%23a89bcc' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 36px;
+  }
+
+  .field-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px 18px;
+  }
+
+  .field { margin-bottom: 18px; }
+  .field:last-child { margin-bottom: 0; }
+
+  .field .hint {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: var(--ink-dim);
+    margin-top: 6px;
+    opacity: 0.75;
+  }
+
+  .field-full { grid-column: 1 / -1; }
+
+  .divider {
+    border: none;
+    border-top: 1px solid var(--line);
+    margin: 22px 0;
+  }
+
+  .result {
+    background: linear-gradient(160deg, #241a3d, #1a1428);
+    border: 1px solid var(--accent-glow);
+    border-radius: 14px;
+    padding: 28px 24px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .result::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 50% -10%, rgba(138,92,246,0.35), transparent 60%);
+    pointer-events: none;
+  }
+
+  .result-label {
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    margin: 0 0 10px;
+  }
+
+  .result-value {
+    font-size: 48px;
+    font-weight: 700;
+    color: var(--star);
+    margin: 0;
+    text-shadow: 0 0 24px rgba(255, 215, 106, 0.35);
+    line-height: 1;
+  }
+
+  .result-value small {
+    font-size: 18px;
+    color: var(--ink-dim);
+    font-weight: 400;
+    margin-left: 8px;
+    text-shadow: none;
+  }
+
+  .breakdown {
+    margin-top: 18px;
+    text-align: left;
+    font-family: 'Courier New', monospace;
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    display: grid;
+    gap: 6px;
+  }
+
+  .breakdown div {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px dashed rgba(168, 155, 204, 0.15);
+    padding-bottom: 5px;
+  }
+
+  .breakdown span:last-child { color: var(--ink); }
+
+  .notice {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    color: var(--ink-dim);
+    background: rgba(138, 92, 246, 0.08);
+    border: 1px dashed var(--line);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-top: 14px;
+    display: none;
+  }
+
+  .notice.show { display: block; }
+</style>
+</head>
+<body>
+
+<div class="sheet">
+  <p class="eyebrow">Resource Planning</p>
+  <h1>Primo <span>Star</span> Calculator</h1>
+  <p class="sub">// estimate your primo star yield from current progress</p>
+
+  <div class="panel">
+    <div class="field">
+      <label for="season">Season</label>
+      <select id="season">
+        <option value="s1">S1 — Witching Hours</option>
+        <option value="s2">S2 — Crossed Paths</option>
+      </select>
+      <div class="notice" id="s2-notice">S2 — Crossed Paths scoring hasn't been set yet. Switch back to S1 to calculate, or tell me the S2 rates and I'll wire them in.</div>
+    </div>
+
+    <hr class="divider">
+
+    <div class="field-row">
+      <div class="field field-full">
+        <label for="charLv">Character Lv</label>
+        <input type="number" id="charLv" min="0" placeholder="e.g. 130" value="100">
+        <div class="hint">+100 score per lv over 100</div>
+      </div>
+
+      <div class="field">
+        <label for="skillLv">Skill Lv (avg)</label>
+        <input type="number" id="skillLv" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">8 slots · +104 score/lv over 100</div>
+      </div>
+
+      <div class="field">
+        <label for="equipLv">Equip Lv (avg)</label>
+        <input type="number" id="equipLv" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">5 slots · +190 score/lv over 100</div>
+      </div>
+
+      <div class="field">
+        <label for="fantomonLv">Fantomon Lv (avg)</label>
+        <input type="number" id="fantomonLv" min="0" placeholder="e.g. 110" value="100">
+        <div class="hint">4 slots · +56 score/lv over 100</div>
+      </div>
+
+      <div class="field">
+        <label for="relicLv">Relic Lv (avg)</label>
+        <input type="number" id="relicLv" min="0" placeholder="e.g. 15" value="10">
+        <div class="hint">20 slots · +1140 score/lv over 10</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="result">
+    <p class="result-label">Estimated Primo Stars</p>
+    <p class="result-value" id="starOutput">10<small>stars</small></p>
+
+    <div class="breakdown" id="breakdown">
+      <div><span>Starting stars</span><span>10</span></div>
+      <div><span>Character score</span><span id="b-char">0</span></div>
+      <div><span>Skill score</span><span id="b-skill">0</span></div>
+      <div><span>Equip score</span><span id="b-equip">0</span></div>
+      <div><span>Fantomon score</span><span id="b-fantomon">0</span></div>
+      <div><span>Relic score</span><span id="b-relic">0</span></div>
+      <div><span>Total score</span><span id="b-total">0</span></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Per-season config. Add S2 numbers here once known.
+  const SEASONS = {
+    s1: {
+      label: "Witching Hours",
+      startingStars: 10,
+      scorePerStar: 100,
+      rules: {
+        charLv:      { base: 100, perLv: 100 },
+        skillLv:     { base: 100, perLv: 104 },
+        equipLv:     { base: 100, perLv: 190 },
+        fantomonLv:  { base: 100, perLv: 56  },
+        relicLv:     { base: 10,  perLv: 1140 }
+      }
+    },
+    s2: null // not yet defined
+  };
+
+  const $ = (id) => document.getElementById(id);
+
+  function scoreFor(level, rule) {
+    const over = Math.max(0, level - rule.base);
+    return over * rule.perLv;
+  }
+
+  function calculate() {
+    const seasonKey = $('season').value;
+    const season = SEASONS[seasonKey];
+    const notice = $('s2-notice');
+
+    if (!season) {
+      notice.classList.add('show');
+      $('starOutput').innerHTML = '—<small>set season rates</small>';
+      ['b-char','b-skill','b-equip','b-fantomon','b-relic','b-total'].forEach(id => $(id).textContent = '—');
+      return;
+    }
+    notice.classList.remove('show');
+
+    const inputs = {
+      charLv: parseFloat($('charLv').value) || 0,
+      skillLv: parseFloat($('skillLv').value) || 0,
+      equipLv: parseFloat($('equipLv').value) || 0,
+      fantomonLv: parseFloat($('fantomonLv').value) || 0,
+      relicLv: parseFloat($('relicLv').value) || 0,
+    };
+
+    const scores = {};
+    let total = 0;
+    for (const key in inputs) {
+      const s = scoreFor(inputs[key], season.rules[key]);
+      scores[key] = s;
+      total += s;
+    }
+
+    const starsFromScore = Math.floor(total / season.scorePerStar);
+    const totalStars = season.startingStars + starsFromScore;
+
+    $('starOutput').innerHTML = `${totalStars}<small>stars</small>`;
+    $('b-char').textContent = scores.charLv.toLocaleString();
+    $('b-skill').textContent = scores.skillLv.toLocaleString();
+    $('b-equip').textContent = scores.equipLv.toLocaleString();
+    $('b-fantomon').textContent = scores.fantomonLv.toLocaleString();
+    $('b-relic').textContent = scores.relicLv.toLocaleString();
+    $('b-total').textContent = total.toLocaleString();
+  }
+
+  document.querySelectorAll('input, select').forEach(el => {
+    el.addEventListener('input', calculate);
+    el.addEventListener('change', calculate);
+  });
+
+  calculate();
+</script>
+
+</body>
+</html>
