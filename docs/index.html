@@ -26,19 +26,33 @@
     color: var(--ink);
 
     /* ====================================================
-       CUSTOM BACKGROUND IMAGE
-       Replace "background.jpg" with your own image filename.
-       Put the image in the same folder as this HTML file
-       (or update the path below to wherever it lives).
+       CUSTOM BACKGROUND IMAGE — desktop default
+       Replace "background-desktop.jpg" with your own image.
+       A separate mobile (vertical) image is set below via
+       media query — see "background-mobile.jpg".
+       Put both images in the same folder as this HTML file
+       (or update the paths to wherever they live).
        ==================================================== */
     background-image:
       linear-gradient(180deg, rgba(10,6,20,0.55), rgba(10,6,20,0.75)),
-      url("background.jpg");
+      url("background-desktop.jpg");
     background-size: cover;
     background-position: center;
     background-attachment: fixed;
     background-repeat: no-repeat;
     min-height: 100vh;
+  }
+
+  /* Mobile / narrow + portrait screens get the vertical image.
+     background-attachment: fixed is dropped on mobile since it
+     causes jank/scroll issues on many phone browsers. */
+  @media (max-width: 767px), (orientation: portrait) {
+    body {
+      background-image:
+        linear-gradient(180deg, rgba(10,6,20,0.55), rgba(10,6,20,0.75)),
+        url("background-mobile.jpg");
+      background-attachment: scroll;
+    }
   }
 
   .wrap {
